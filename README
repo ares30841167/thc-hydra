@@ -22,6 +22,11 @@ Hydra in the most current github state can be directly downloaded via docker:
 docker pull vanhauser/hydra
 ```
 
+CUSTOM VERSION
+--------------
+Make Hydra support the GIVEMEFLAG HTTP method for applying in a CTF question.
+
+Usage: ./hydra -l {ACCOUNT} -P {DICTIONARY_FILE} {TARGET_IP} -s {PORT} http-givemeflag {TARGET_URL}
 
 INTRODUCTION
 ------------

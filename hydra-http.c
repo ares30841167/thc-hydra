@@ -414,6 +414,8 @@ void service_http_post(char *ip, int32_t sp, unsigned char options, char *miscpt
 
 void service_http_head(char *ip, int32_t sp, unsigned char options, char *miscptr, FILE *fp, int32_t port, char *hostname) { service_http(ip, sp, options, miscptr, fp, port, hostname, "HEAD"); }
 
+void service_http_givemeflag(char *ip, int32_t sp, unsigned char options, char *miscptr, FILE *fp, int32_t port, char *hostname) { service_http(ip, sp, options, miscptr, fp, port, hostname, "GIVEMEFLAG"); }
+
 int32_t service_http_init(char *ip, int32_t sp, unsigned char options, char *miscptr, FILE *fp, int32_t port, char *hostname) {
   // called before the childrens are forked off, so this is the function
   // which should be filled if initial connections and service setup has to be

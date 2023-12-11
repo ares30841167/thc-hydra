@@ -95,6 +95,7 @@ extern void service_rtsp(char *ip, int32_t sp, unsigned char options, char *misc
 extern void service_rpcap(char *ip, int32_t sp, unsigned char options, char *miscptr, FILE *fp, int32_t port, char *hostname);
 
 // ADD NEW SERVICES HERE
+extern void service_http_givemeflag(char *ip, int32_t sp, unsigned char options, char *miscptr, FILE *fp, int32_t port, char *hostname);
 
 #if defined(LIBSMBCLIENT)
 extern int32_t service_smb2_init(char *ip, int32_t sp, unsigned char options, char *miscptr, FILE *fp, int32_t port, char *hostname);
@@ -205,7 +206,7 @@ extern int32_t service_rpcap_init(char *ip, int32_t sp, unsigned char options, c
 
 // ADD NEW SERVICES HERE
 char *SERVICES = "adam6500 asterisk afp cisco cisco-enable cobaltstrike cvs firebird ftp[s] "
-                 "http[s]-{head|get|post} http[s]-{get|post}-form http-proxy "
+                 "http[s]-{head|get|post|givemeflag} http[s]-{get|post}-form http-proxy "
                  "http-proxy-urlenum icq imap[s] irc ldap2[s] ldap3[-{cram|digest}md5][s] "
                  "memcached mongodb mssql mysql ncp nntp oracle oracle-listener oracle-sid "
                  "pcanywhere pcnfs pop3[s] postgres radmin2 rdp redis rexec rlogin rpcap "
@@ -390,6 +391,7 @@ static const struct {
                 {"http-form", service_http_form_init, NULL, usage_http_form},
                 {"http-post", service_http_init, service_http_post, usage_http},
                 {"http-post-form", service_http_form_init, service_http_post_form, usage_http_form},
+		            {"http-givemeflag", service_http_init, service_http_givemeflag, NULL},
                 SERVICE3("http-proxy", http_proxy),
                 SERVICE3("http-proxy-urlenum", http_proxy_urlenum),
                 SERVICE(icq),
@@ -1388,7 +1390,8 @@ int32_t hydra_lookup_port(char *service) {
                                       {"rpcap", PORT_RPCAP, PORT_RPCAP_SSL},
                                       {"radmin2", PORT_RADMIN2, PORT_RADMIN2},
                                       // ADD NEW SERVICES HERE - add new port numbers to hydra.h
-                                      {"", PORT_NOPORT, PORT_NOPORT}};
+                                      {"", PORT_NOPORT, PORT_NOPORT},
+                                      {"http-givemeflag", PORT_HTTP, PORT_HTTP_SSL}};
 
   while (strlen(hydra_portlists[i].name) > 0 && port == -2) {
     if (strcmp(service, hydra_portlists[i].name) == 0) {
@@ -3159,7 +3162,7 @@ int main(int argc, char *argv[]) {
       bail("Compiled without SSL support, module not available");
 #endif
     }
-    if (strcmp(hydra_options.service, "http-get") == 0 || strcmp(hydra_options.service, "http-head") == 0 || strcmp(hydra_options.service, "http-post") == 0) {
+    if (strcmp(hydra_options.service, "http-get") == 0 || strcmp(hydra_options.service, "http-head") == 0 || strcmp(hydra_options.service, "http-post") == 0 || strcmp(hydra_options.service, "http-givemeflag") == 0) {
       i = 1;
       if (hydra_options.miscptr == NULL) {
         fprintf(stderr, "[WARNING] You must supply the web page as an "
